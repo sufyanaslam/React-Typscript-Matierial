@@ -9,7 +9,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { useMediaQuery } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
-
 import Paper from "@material-ui/core/Paper";
 import PlayerDialog from "./PlayerModal";
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,13 +25,17 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: "12px",
       color: "grey",
     },
+    delete: {
+      marginLeft: "10px"
+    }
   })
 );
 
 interface Props {
   players: any;
+  onDelete: any;
 }
-const PlayerList: FC<Props> = ({ players }): ReactElement => {
+const PlayerList: FC<Props> = ({ players, onDelete }): ReactElement => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [player, setPlayer] = React.useState({});
@@ -45,6 +48,9 @@ const PlayerList: FC<Props> = ({ players }): ReactElement => {
     setPlayer(players[index]);
 
     setOpen(!open);
+  }
+  function deletePlayer(index: any) {
+    onDelete(index);
   }
 
   function onSave(player: any) {
@@ -84,19 +90,29 @@ const PlayerList: FC<Props> = ({ players }): ReactElement => {
                   >
                     Edit
                   </Button>
+                  <Button
+                    className={classes.delete}
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => deletePlayer(index)}
+                  >
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      {open && <PlayerDialog
-        fullScreen={fullScreen}
-        open={open}
-        player={player}
-        onClose={handleModal}
-        onSave={onSave}
-      />}
+      {open && (
+        <PlayerDialog
+          fullScreen={fullScreen}
+          open={open}
+          player={player}
+          onClose={handleModal}
+          onSave={onSave}
+        />
+      )}
     </>
   );
 };
